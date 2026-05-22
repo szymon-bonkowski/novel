@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Przekleta Twierdza - Interaktywna nowelka wizualna w stylu dark fantasy. Odkryj sekrety smoczego paktu.">
+    <title>Przekleta Twierdza - Nowelka Wizualna</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Serif:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+</head>
+<body>
+    <audio id="sfx-click" preload="auto">
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="app-wrapper">
+        <div id="title-screen" class="screen active">
+            <div class="title-particles" id="title-particles"></div>
+            <div class="title-content">
+                <h1 class="title-heading">
+                    <span class="title-line title-line--sub">Przekleta</span>
+                    <span class="title-line title-line--main">Twierdza</span>
+                </h1>
+                <p class="title-tagline">Odkryj tajemnice smoczego paktu w ruinach pradawnej fortecy</p>
+                <div class="title-menu">
+                    <button id="btn-new-game" class="title-btn title-btn--primary">Nowa Gra</button>
+                    <button id="btn-title-load" class="title-btn title-btn--secondary">Wczytaj Gre</button>
+                    <button id="btn-continue" class="title-btn title-btn--secondary">Kontynuuj</button>
+                    <div class="title-menu-row">
+                        <button id="btn-title-settings" class="title-btn title-btn--small">Ustawienia</button>
+                        <button id="btn-title-gallery" class="title-btn title-btn--small">Galeria</button>
+                        <button id="btn-title-achievements" class="title-btn title-btn--small">Osiagniecia</button>
+                    </div>
+                </div>
+                <div class="title-footer">
+                </div>
+            </div>
+        </div>
+
+        <div id="game-screen" class="screen">
+            <div id="scene-bg-container">
+                <img id="scene-bg" src="bg_twierdza.png" alt="Tlo sceny">
+                <div id="scene-overlay"></div>
+            </div>
+
+            <div id="hud-bar">
+                <div class="hud-left">
+                    <div class="hud-chapter" id="hud-chapter">Rozdzial 1</div>
+                    <div class="hud-separator"></div>
+                    <div class="hud-stats">
+                        <div class="hud-stat" id="hud-stat-wiedza" data-tooltip="Wiedza">
+                            <svg class="hud-icon" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                            <span class="hud-stat-val" id="stat-wiedza">0</span>
+                        </div>
+                        <div class="hud-stat" id="hud-stat-odwaga" data-tooltip="Odwaga">
+                            <svg class="hud-icon" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                            <span class="hud-stat-val" id="stat-odwaga">0</span>
+                        </div>
+                        <div class="hud-stat" id="hud-stat-relacja" data-tooltip="Zaufanie Arii">
+                            <svg class="hud-icon" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                            <span class="hud-stat-val" id="stat-relacja">0</span>
+                        </div>
+                        <div class="hud-stat" id="hud-stat-moc" data-tooltip="Moc Magiczna">
+                            <svg class="hud-icon" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                            <span class="hud-stat-val" id="stat-moc">0</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="hud-center">
+                    <div class="hud-inventory" id="hud-inventory"></div>
+                </div>
+                <div class="hud-right">
+                    <button id="btn-save-quick" class="hud-btn" data-tooltip="Szybki Zapis">
+                        <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                    </button>
+                    <button id="btn-game-tree" class="hud-btn" data-tooltip="Drzewo Postepu">
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="3"/><line x1="12" y1="8" x2="12" y2="14"/><circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><line x1="12" y1="14" x2="6" y2="14"/><line x1="12" y1="14" x2="18" y2="14"/><line x1="6" y1="14" x2="6" y2="14"/><line x1="18" y1="14" x2="18" y2="14"/></svg>
+                    </button>
+                    <button id="btn-game-inventory" class="hud-btn" data-tooltip="Ekwipunek">
+                        <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+                    </button>
+                    <button id="btn-game-settings" class="hud-btn" data-tooltip="Ustawienia">
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            <div id="dialogue-panel">
+                <div id="speaker-tag">
+                    <span id="speaker-name">Narrator</span>
+                </div>
+                <div id="dialogue-body">
+                    <p id="dialogue-text"></p>
+                </div>
+                <div id="dialogue-click-hint">Kliknij aby kontynuowac...</div>
+            </div>
+
+            <div id="choices-panel"></div>
+
+            <div id="toast-container"></div>
+        </div>
+
+        <div id="ending-screen" class="screen">
+            <div class="ending-overlay"></div>
+            <div class="ending-content">
+                <div class="ending-badge" id="ending-badge">ZAKONCZENIE</div>
+                <h2 class="ending-title" id="ending-title">Tytul Zakonczenia</h2>
+                <p class="ending-description" id="ending-description">Opis zakonczenia...</p>
+                <div class="ending-stats" id="ending-stats"></div>
+                <div class="ending-actions">
+                    <button id="btn-play-again" class="ending-btn ending-btn--primary">Zagraj Ponownie</button>
+                    <button id="btn-back-to-menu" class="ending-btn ending-btn--secondary">Menu Glowne</button>
+                </div>
+                <div class="ending-progress" id="ending-progress"></div>
+            </div>
+        </div>
+
+        <div id="modal-settings" class="modal-overlay">
+            <div class="modal-panel modal-panel--medium modal-panel--stone">
+                <div class="modal-header">
+                    <h2>Ksiega Zasad</h2>
+                    <button class="modal-close" data-close="modal-settings">&times;</button>
+                </div>
+                <div class="modal-body modal-body--scroll">
+                    <div class="settings-section">
+                        <h3>Magia Dzwieku</h3>
+                        <div class="setting-row">
+                            <label>Szum Wiatru (Muzyka)</label>
+                            <label class="rune-switch">
+                                <input type="checkbox" id="opt-music">
+                                <span class="rune-slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-row">
+                            <label>Sila Wiatru</label>
+                            <div class="range-group">
+                                <input type="range" id="opt-music-vol" min="0" max="1" step="0.05" value="0.5">
+                                <span class="range-val" id="opt-music-vol-val">50%</span>
+                            </div>
+                        </div>
+                        <div class="setting-row">
+                            <label>Odglosy Zaklec (SFX)</label>
+                            <label class="rune-switch">
+                                <input type="checkbox" id="opt-sfx" checked>
+                                <span class="rune-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="settings-section">
+                        <h3>Zwoje i Wizje</h3>
+                        <div class="setting-row">
+                            <label>Aura Wizualna</label>
+                            <div class="rune-group" id="opt-theme">
+                                <button class="rune-btn active" data-value="neon">Zimny Ogien</button>
+                                <button class="rune-btn" data-value="sakura">Pyl Iluzji</button>
+                                <button class="rune-btn" data-value="amber">Zloto Run</button>
+                                <button class="rune-btn" data-value="violet">Cien Nocy</button>
+                            </div>
+                        </div>
+                        <div class="setting-row">
+                            <label>Rozmiar Run</label>
+                            <div class="rune-group" id="opt-font-size">
+                                <button class="rune-btn" data-value="small">Maly</button>
+                                <button class="rune-btn active" data-value="medium">Sredni</button>
+                                <button class="rune-btn" data-value="large">Duzy</button>
+                            </div>
+                        </div>
+                        <div class="setting-row">
+                            <label>Styl Pisma</label>
+                            <div class="rune-group" id="opt-font">
+                                <button class="rune-btn active" data-value="inter">Nowoczesny</button>
+                                <button class="rune-btn" data-value="serif">Klasyczny</button>
+                                <button class="rune-btn" data-value="mono">Pradawny</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="settings-section">
+                        <h3>Opanowanie Czasu</h3>
+                        <div class="setting-row">
+                            <label>Bieg Czasu (Tekst)</label>
+                            <div class="rune-group" id="opt-text-speed">
+                                <button class="rune-btn" data-value="slow">Powolny</button>
+                                <button class="rune-btn active" data-value="normal">Rytmiczny</button>
+                                <button class="rune-btn" data-value="fast">Blyskawiczny</button>
+                                <button class="rune-btn" data-value="instant">Czar Czasu</button>
+                            </div>
+                        </div>
+                        <div class="setting-row">
+                            <label>Wizja Ogolna</label>
+                            <button id="opt-fullscreen" class="stone-action-btn">Aktywuj Pelny Wzrok</button>
+                        </div>
+                        <div class="setting-row setting-row--danger">
+                            <label>Zaklecie Zapomnienia</label>
+                            <button id="opt-reset" class="stone-danger-btn">Wymaz Sciezki Przeznaczenia</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="modal-tree" class="modal-overlay">
+            <div class="modal-panel modal-panel--full modal-panel--magical">
+                <div class="tree-fog"></div>
+                <div class="modal-header">
+                    <h2>Sciezki Przeznaczenia</h2>
+                    <div class="tree-controls">
+                        <button id="tree-zoom-in" class="tree-ctrl-btn">+</button>
+                        <button id="tree-zoom-out" class="tree-ctrl-btn">-</button>
+                        <button id="tree-zoom-reset" class="tree-ctrl-btn">Reset</button>
+                        <span id="tree-counter" class="tree-counter">0 / 0 wspomnien</span>
+                    </div>
+                    <button class="modal-close" data-close="modal-tree">&times;</button>
+                </div>
+                <div class="modal-body modal-body--tree vertical">
+                    <div id="tree-viewport">
+                        <div id="tree-canvas">
+                            <svg id="tree-svg"></svg>
+                            <div id="tree-nodes" class="vertical-layout"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="modal-inventory" class="modal-overlay">
+            <div class="modal-panel modal-panel--medium">
+                <div class="modal-header">
+                    <h2>Ekwipunek</h2>
+                    <button class="modal-close" data-close="modal-inventory">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div id="inventory-grid" class="inventory-grid"></div>
+                    <div id="inventory-detail" class="inventory-detail">
+                        <p class="inventory-empty">Twoj ekwipunek jest pusty. Przeszukuj lokacje, by znalezc przedmioty.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="modal-gallery" class="modal-overlay">
+            <div class="modal-panel modal-panel--large">
+                <div class="modal-header">
+                    <h2>Galeria Scen</h2>
+                    <button class="modal-close" data-close="modal-gallery">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div id="gallery-grid" class="gallery-grid"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="modal-achievements" class="modal-overlay">
+            <div class="modal-panel modal-panel--medium">
+                <div class="modal-header">
+                    <h2>Osiagniecia</h2>
+                    <span id="ach-counter" class="ach-counter">0 / 0</span>
+                    <button class="modal-close" data-close="modal-achievements">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div id="achievements-list" class="achievements-list"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="modal-save" class="modal-overlay">
+            <div class="modal-panel modal-panel--medium">
+                <div class="modal-header">
+                    <h2 id="save-modal-title">Zapisz Gre</h2>
+                    <button class="modal-close" data-close="modal-save">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div id="save-slots" class="save-slots"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
